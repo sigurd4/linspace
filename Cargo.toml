@@ -1,0 +1,13 @@
+[package]
+name = "linspace"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "Traits for numpy linspace equivalent functions, into both vectors and arrays, the latter of which can be executed at compile-time"
+repository = "https://github.com/sigurd4/linspace"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+numscale = "0.1.0"
+moddef = "0.1.0"
