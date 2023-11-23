@@ -3,7 +3,12 @@
 #![feature(const_fn_floating_point_arithmetic)]
 #![feature(const_refs_to_cell)]
 
-moddef::pub_flat_mods!(linspace linspace_array);
+moddef::moddef!(
+    flat(pub) mod {
+        linspace,
+        linspace_array
+    }
+);
 
 #[cfg(test)]
 mod test

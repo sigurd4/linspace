@@ -10,4 +10,4 @@ repository = "https://github.com/sigurd4/linspace"
 
 [dependencies]
 numscale = "0.1.0"
-moddef = "0.1.0"
+moddef = "0.2.2"
