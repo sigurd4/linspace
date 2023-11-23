@@ -1,6 +1,6 @@
 [package]
 name = "linspace"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 license = "MIT"
 description = "Traits for numpy linspace equivalent functions, into both vectors and arrays, the latter of which can be executed at compile-time"
