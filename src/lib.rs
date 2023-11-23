@@ -18,9 +18,10 @@ mod test
     #[test]
     fn test()
     {
-        const T: [f32; 4] = (0.0..1.0).linspace_array();
+        let t: [f32; 4] = (0.0..1.0).linspace_array();
+        println!("{:?}", t);
+        
         let t: Vec<f32> = (0.0..1.0).linspace(4);
-        println!("{:?}", T);
         println!("{:?}", t);
     }
 }

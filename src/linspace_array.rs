@@ -10,9 +10,9 @@ pub trait LinspaceArray<T, const LENGTH: usize>: Linspace<T>
     fn linspace_array(self) -> [T; LENGTH];
 }
 
-impl<T, const LENGTH: usize> const LinspaceArray<T, LENGTH> for Range<T>
+impl<T, const LENGTH: usize> /*const*/ LinspaceArray<T, LENGTH> for Range<T>
 where
-    T: ~const Add<T, Output = T> + ~const Sub<T, Output = T> + ~const Div<T, Output = T> + ~const NumScale<f64> + Copy
+    T: /*~const*/ Add<T, Output = T> + /*~const*/ Sub<T, Output = T> + /*~const*/ Div<T, Output = T> + /*~const*/ NumScale<f64> + Copy
 {
     fn linspace_array(self) -> [T; LENGTH]
     {
@@ -33,9 +33,9 @@ where
         a
     }
 }
-impl<T, const LENGTH: usize> const LinspaceArray<T, LENGTH> for RangeInclusive<T>
+impl<T, const LENGTH: usize> /*const*/ LinspaceArray<T, LENGTH> for RangeInclusive<T>
 where
-    T: ~const Add<T, Output = T> + ~const Sub<T, Output = T> + ~const Div<T, Output = T> + ~const NumScale<f64> + Copy
+    T: /*~const*/ Add<T, Output = T> + /*~const*/ Sub<T, Output = T> + /*~const*/ Div<T, Output = T> + /*~const*/ NumScale<f64> + Copy
 {
     fn linspace_array(self) -> [T; LENGTH]
     {
