@@ -1,3 +1,4 @@
+#![no_std]
 #![feature(const_trait_impl)]
 #![feature(try_trait_v2)]
 #![feature(trusted_random_access)]
