@@ -24,15 +24,15 @@
 //! ```rust
 //! use linspace::*;
 //! 
-//! let vec: Vec<u32> = (0..100).linspace(4).collect();
+//! let x: Vec<u32> = (0..100).linspace(4).collect();
+//! assert_eq!(x, [0, 25, 50, 75]);
 //! println!("{:?}", vec);
 //! 
-//! let array: [u32; 4] = (0..100).linspace_array();
+//! let y: [u32; 4] = (0..100).linspace_array();
+//! assert_eq!(y, [0, 25, 50, 75]);
 //! println!("{:?}", array);
 //! 
-//! assert_eq!(vec, array);
-//! assert_eq!(vec, [0, 25, 50, 75]);
-//! assert_eq!(array, [0, 25, 50, 75]);
+//! assert_eq!(x, y);
 //! ```
 //! 
 //! Both inclusive and exclusive ranges can be used.
@@ -41,15 +41,15 @@
 //! ```rust
 //! use linspace::*;
 //! 
-//! let vec_inclusive: Vec<u32> = (0..=100).linspace(5).collect();
-//! println!("{:?}", vec_inclusive);
+//! let x: Vec<u32> = (0..=100).linspace(5).collect();
+//! assert_eq!(x, [0, 25, 50, 75, 100]);
+//! println!("{:?}", x);
 //! 
-//! let array_inclusive: [u32; 5] = (0..=100).linspace_array();
-//! println!("{:?}", array_inclusive);
+//! let y: [u32; 5] = (0..=100).linspace_array();
+//! assert_eq!(y, [0, 25, 50, 75, 100]);
+//! println!("{:?}", y);
 //! 
-//! assert_eq!(vec_inclusive, array_inclusive);
-//! assert_eq!(vec_inclusive, [0, 25, 50, 75, 100]);
-//! assert_eq!(array_inclusive, [0, 25, 50, 75, 100]);
+//! assert_eq!(x, y);
 //! ```
 //! 
 //! Want a non-linear range? That's also possible. After all, [`Linspace::linspace`] just returns an [`Iterator`].
@@ -57,11 +57,11 @@
 //! ```rust
 //! use linspace::*;
 //! 
-//! let vec: Vec<f32> = (0.0..1.0)
+//! let x: Vec<f32> = (0.0..1.0)
 //!     .linspace(10)
-//!     .map(|x| 10.0f32.powf(x))
+//!     .map(|z| 10.0f32.powf(z))
 //!     .collect();
-//! println!("{:?}", vec);
+//! println!("{:?}", x);
 //! ```
 //! 
 //! Very convenient!
