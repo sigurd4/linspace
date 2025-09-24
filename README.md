@@ -24,7 +24,7 @@ Only works on bounded ranges like [`Range`](core::ops::Range) and [`RangeInclusi
 
 ## Examples
 
-Both of these will print `[0, 25, 50, 75]`
+Both of these will print `[0, 25, 50, 75]`.
 
 ```rust
 use linspace::*;
@@ -41,7 +41,7 @@ assert_eq!(array, [0, 25, 50, 75]);
 ```
 
 Both inclusive and exclusive ranges can be used.
-And these will print `[0, 25, 50, 75, 100]`
+And these will print `[0, 25, 50, 75, 100]`.
 
 ```rust
 use linspace::*;

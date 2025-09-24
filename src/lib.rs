@@ -19,7 +19,7 @@
 //! 
 //! ## Examples
 //! 
-//! Both of these will print `[0, 25, 50, 75]`
+//! Both of these will print `[0, 25, 50, 75]`.
 //! 
 //! ```rust
 //! use linspace::*;
@@ -36,7 +36,7 @@
 //! ```
 //! 
 //! Both inclusive and exclusive ranges can be used.
-//! And these will print `[0, 25, 50, 75, 100]`
+//! And these will print `[0, 25, 50, 75, 100]`.
 //! 
 //! ```rust
 //! use linspace::*;
