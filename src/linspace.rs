@@ -113,7 +113,9 @@ macro_rules! impl_linspace {
                         }
                         slice[i].write(iter.next_unchecked());
                     }
-                    slice.assume_init_mut()
+                    unsafe {
+                        slice.assume_init_mut()
+                    }
                 }
                 fn linspace_slice(&self, slice: &mut [T])
                 {

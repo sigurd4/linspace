@@ -32,9 +32,9 @@ impl<T, const INCLUSIVE: bool> Linspaced<T, INCLUSIVE>
         + end.scale(i as f64/div)
     }
 
-    const fn f(&self) -> impl Fn(usize) -> T
+    const fn f<'a>(&self) -> impl Fn(usize) -> T + 'a
     where
-        T: Copy + NumScale<f64> + Add<Output = T>
+        T: Copy + NumScale<f64> + Add<Output = T> + 'a
     {
         let start = self.start;
         let end = self.end;
