@@ -62,6 +62,12 @@ pub trait Linspace<T>: Sized
 
     /// Fills a slice with evenly spaced values.
     /// 
+    /// # Safety
+    /// 
+    /// Values in the slice will be overwritten. They will not be dropped.
+    /// 
+    /// If `T` is not trivially droppable, the slice must be uninitialized.
+    /// 
     /// # Example
     /// 
     /// ```rust
