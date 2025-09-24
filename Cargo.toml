@@ -3,7 +3,7 @@ name = "linspace"
 version = "0.2.0"
 edition = "2021"
 license = "MIT"
-description = "Traits for numpy linspace equivalent functions, into both vectors and arrays, the latter of which can be executed at compile-time"
+description = "Turns a range into a linearly spaced sequence of values."
 repository = "https://github.com/sigurd4/linspace"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
