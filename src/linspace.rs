@@ -1,4 +1,4 @@
-use core::{mem::MaybeUninit, ops::{Add, Range, RangeInclusive, Sub}};
+use core::{mem::MaybeUninit, ops::{Add, Range, RangeInclusive}};
 
 use numscale::NumScale;
 
@@ -90,7 +90,7 @@ macro_rules! impl_linspace {
         $(
             impl<T> const Linspace<T> for $r<T>
             where
-                T: Copy + ~const Add<Output = T> + ~const Sub<Output = T> + ~const NumScale<f64>,
+                T: Copy + ~const Add<Output = T> + ~const NumScale<f64>,
                 Linspaced<T, $incl>: ExactSizeIterator<Item = T>
             {
                 type Output = Linspaced<T, $incl>;

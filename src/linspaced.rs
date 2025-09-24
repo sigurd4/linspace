@@ -1,4 +1,4 @@
-use core::{iter::{FusedIterator, TrustedLen, TrustedRandomAccessNoCoerce}, ops::{Add, Range, Sub, Try}};
+use core::{iter::{FusedIterator, TrustedLen, TrustedRandomAccessNoCoerce}, ops::{Add, Range, Try}};
 
 use numscale::NumScale;
 
@@ -6,7 +6,7 @@ use numscale::NumScale;
 pub struct Linspaced<T, const INCLUSIVE: bool>
 {
     start: T,
-    span: T,
+    end: T,
     count: Range<usize>
 }
 
@@ -14,20 +14,22 @@ impl<T, const INCLUSIVE: bool> Linspaced<T, INCLUSIVE>
 {
     pub(crate) const fn new(start: T, end: T, count: usize) -> Self
     where
-        T: Copy + ~const Sub<Output = T>
+        T: Copy
     {
         Self {
             start,
-            span: end - start,
+            end,
             count: 0..count
         }
     }
 
-    pub(crate) const fn scale(start: T, span: T, i: usize, n: usize) -> T
+    pub(crate) const fn scale(start: T, end: T, i: usize, n: usize) -> T
     where
         T: Copy + ~const NumScale<f64> + ~const Add<Output = T>
     {
-        start + span.scale(i as f64/(n.saturating_sub(INCLUSIVE as usize)).max(1) as f64)
+        let div = (n.saturating_sub(INCLUSIVE as usize)).max(1) as f64;
+        start.scale(n.saturating_sub(i) as f64/div)
+        + end.scale(i as f64/div)
     }
 
     const fn f(&self) -> impl Fn(usize) -> T
@@ -35,16 +37,16 @@ impl<T, const INCLUSIVE: bool> Linspaced<T, INCLUSIVE>
         T: Copy + NumScale<f64> + Add<Output = T>
     {
         let start = self.start;
-        let span = self.span;
+        let end = self.end;
         let n = self.count.end;
-        move |i| Self::scale(start, span, i, n)
+        move |i| Self::scale(start, end, i, n)
     }
 
     pub(crate) const fn next_unchecked(&mut self) -> T
     where
         T: Copy + ~const NumScale<f64> + ~const Add<Output = T>
     {
-        let x = Self::scale(self.start, self.span, self.count.start, self.count.end);
+        let x = Self::scale(self.start, self.end, self.count.start, self.count.end);
         self.count.start += 1;
         x
     }
