@@ -30,14 +30,14 @@ Both of these will print `[0, 25, 50, 75]`.
 use linspace::*;
 
 let x: Vec<u32> = (0..100).linspace(4).collect();
+assert_eq!(x, [0, 25, 50, 75]);
 println!("{:?}", x);
 
 let y: [u32; 4] = (0..100).linspace_array();
+assert_eq!(y, [0, 25, 50, 75]);
 println!("{:?}", y);
 
 assert_eq!(x, y);
-assert_eq!(x, [0, 25, 50, 75]);
-assert_eq!(y, [0, 25, 50, 75]);
 ```
 
 Both inclusive and exclusive ranges can be used.
@@ -47,14 +47,14 @@ And these will print `[0, 25, 50, 75, 100]`.
 use linspace::*;
 
 let x: Vec<u32> = (0..=100).linspace(5).collect();
+assert_eq!(x, [0, 25, 50, 75, 100]);
 println!("{:?}", x);
 
 let y: [u32; 5] = (0..=100).linspace_array();
+assert_eq!(y, [0, 25, 50, 75, 100]);
 println!("{:?}", y);
 
 assert_eq!(x, y);
-assert_eq!(x, [0, 25, 50, 75, 100]);
-assert_eq!(y, [0, 25, 50, 75, 100]);
 ```
 
 Want a non-linear range? That's also possible. After all, `Linspace::linspace` just returns an `Iterator`.

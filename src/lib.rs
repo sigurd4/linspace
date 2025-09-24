@@ -26,11 +26,11 @@
 //!
 //! let x: Vec<u32> = (0..100).linspace(4).collect();
 //! assert_eq!(x, [0, 25, 50, 75]);
-//! println!("{:?}", vec);
+//! println!("{:?}", x);
 //!
 //! let y: [u32; 4] = (0..100).linspace_array();
 //! assert_eq!(y, [0, 25, 50, 75]);
-//! println!("{:?}", array);
+//! println!("{:?}", y);
 //!
 //! assert_eq!(x, y);
 //! ```
