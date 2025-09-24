@@ -1,19 +1,25 @@
 #![feature(const_trait_impl)]
-#![feature(const_transmute_copy)]
-#![feature(const_fn_floating_point_arithmetic)]
-#![feature(const_refs_to_cell)]
+#![feature(try_trait_v2)]
+#![feature(trusted_random_access)]
+#![feature(exact_size_is_empty)]
+#![feature(trusted_len)]
+#![feature(const_destruct)]
+#![feature(const_ops)]
+#![feature(const_cmp)]
+#![feature(maybe_uninit_array_assume_init)]
+#![feature(maybe_uninit_slice)]
 
 moddef::moddef!(
     flat(pub) mod {
         linspace,
-        linspace_array
+        linspaced
     }
 );
 
 #[cfg(test)]
 mod test
 {
-    use crate::{LinspaceArray, Linspace};
+    use crate::{Linspace};
 
     #[test]
     fn test()
@@ -21,7 +27,7 @@ mod test
         let t: [f32; 4] = (0.0..1.0).linspace_array();
         println!("{:?}", t);
         
-        let t: Vec<f32> = (0.0..1.0).linspace(4);
+        let t: Vec<f32> = (0.0..1.0).linspace(4).collect();
         println!("{:?}", t);
     }
 }
