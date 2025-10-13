@@ -27,8 +27,9 @@ impl<T, const INCLUSIVE: bool> Linspaced<T, INCLUSIVE>
     where
         T: Copy + ~const NumScale<f64> + ~const Add<Output = T>
     {
-        let div = (n.saturating_sub(INCLUSIVE as usize)).max(1) as f64;
-        start.scale(n.saturating_sub(i) as f64/div)
+        let m = (n.saturating_sub(INCLUSIVE as usize)).max(1);
+        let div = m as f64;
+        start.scale(m.saturating_sub(i) as f64/div)
         + end.scale(i as f64/div)
     }
 
@@ -173,8 +174,12 @@ mod test
     #[test]
     fn inclusive_bounds()
     {
-        let r = (0.0..=50.0).linspace(128).last().unwrap();
+        const DEGC_TO_K: f64 = 273.15;
+        let theta_min = DEGC_TO_K;
+        let theta_max = 50.0 + DEGC_TO_K;
 
-        assert_eq!(r, 50.0);
+        let r = (theta_min..=theta_max).linspace(128).last().unwrap();
+
+        assert_eq!(r, theta_max);
     }
 }
