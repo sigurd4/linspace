@@ -164,3 +164,17 @@ where
 {
     
 }
+
+#[cfg(test)]
+mod test
+{
+    use crate::Linspace;
+
+    #[test]
+    fn inclusive_bounds()
+    {
+        let r = (0.0..=50.0).linspace(128).last().unwrap();
+
+        assert_eq!(r, 50.0);
+    }
+}
