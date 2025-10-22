@@ -27,7 +27,7 @@ impl<T, const INCLUSIVE: bool> Linspaced<T, INCLUSIVE>
     where
         T: Copy + ~const NumScale<f64> + ~const Add<Output = T>
     {
-        let m = (n.saturating_sub(INCLUSIVE as usize)).max(1);
+        let m = n.saturating_sub(INCLUSIVE as usize + 1) + 1;
         let div = m as f64;
         start.scale(m.saturating_sub(i) as f64/div)
         + end.scale(i as f64/div)

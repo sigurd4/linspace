@@ -6,7 +6,6 @@
 #![feature(trusted_len)]
 #![feature(const_destruct)]
 #![feature(const_ops)]
-#![feature(const_cmp)]
 #![feature(maybe_uninit_array_assume_init)]
 #![feature(maybe_uninit_slice)]
 
