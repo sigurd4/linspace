@@ -8,6 +8,7 @@
 #![feature(const_ops)]
 #![feature(maybe_uninit_array_assume_init)]
 #![feature(maybe_uninit_slice)]
+#![feature(const_try)]
 
 //! Turns a range into a linearly spaced sequence of values.
 //!
@@ -69,6 +70,7 @@
 moddef::moddef!(
     flat(pub) mod {
         linspace,
-        linspaced
+        linspaced,
+        iter
     }
 );

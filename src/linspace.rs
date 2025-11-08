@@ -1,13 +1,14 @@
 use core::{mem::MaybeUninit, ops::{Add, Range, RangeInclusive}};
 
+use bulks::Bulk;
 use numscale::NumScale;
 
-use crate::Linspaced;
+use crate::{Linspaced, IntoIter};
 
 #[const_trait]
 pub trait Linspace<T>: Sized
 {
-    type Output: ExactSizeIterator<Item = T>;
+    type Output: Bulk<Item = T>;
 
     /// Returns an iterator of evenly spaced values. `count` must be specified.
     /// 
@@ -90,8 +91,7 @@ macro_rules! impl_linspace {
         $(
             impl<T> const Linspace<T> for $r<T>
             where
-                T: Copy + ~const Add<Output = T> + ~const NumScale<f64>,
-                Linspaced<T, $incl>: ExactSizeIterator<Item = T>
+                T: Copy + ~const Add<Output = T> + ~const NumScale<f64>
             {
                 type Output = Linspaced<T, $incl>;
 
@@ -103,15 +103,12 @@ macro_rules! impl_linspace {
                 }
                 unsafe fn linspace_uninit_slice<'a>(&self, slice: &'a mut [MaybeUninit<T>]) -> &'a mut [T]
                 {
-                    let mut iter = self.linspace(slice.len());
-                    loop
+                    let mut iter = IntoIter::new(self.linspace(slice.len()));
+                    let mut i = 0;
+                    while let Some(next) = iter.forward()
                     {
-                        let i = iter.pos();
-                        if i >= iter.total_len()
-                        {
-                            break
-                        }
-                        slice[i].write(iter.next_unchecked());
+                        slice[i].write(next);
+                        i += 1;
                     }
                     unsafe {
                         slice.assume_init_mut()
@@ -119,15 +116,12 @@ macro_rules! impl_linspace {
                 }
                 fn linspace_slice(&self, slice: &mut [T])
                 {
-                    let mut iter = self.linspace(slice.len());
-                    loop
+                    let mut iter = IntoIter::new(self.linspace(slice.len()));
+                    let mut i = 0;
+                    while let Some(next) = iter.forward()
                     {
-                        let i = iter.pos();
-                        if i >= iter.total_len()
-                        {
-                            break
-                        }
-                        slice[i] = iter.next_unchecked()
+                        slice[i] = next;
+                        i += 1;
                     }
                 }
             }
@@ -143,6 +137,8 @@ impl_linspace!(
 #[cfg(test)]
 mod test
 {
+    use bulks::Bulk;
+
     use crate::{Linspace};
 
     #[test]

@@ -13,4 +13,5 @@ categories = ["rust-patterns", "no-std::no-alloc"]
 [dependencies]
 rustversion = "1.0.22"
 numscale = "0.1.0"
+bulks = { version = "0.2.0", default-features = false }
 moddef = "0.3.0"
