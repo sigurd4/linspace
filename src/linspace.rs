@@ -1,14 +1,16 @@
 use core::{mem::MaybeUninit, ops::{Add, Range, RangeInclusive}};
 
-use bulks::Bulk;
 use numscale::NumScale;
 
-use crate::{Linspaced, IntoIter};
+use crate::Linspaced;
 
 #[const_trait]
 pub trait Linspace<T>: Sized
 {
-    type Output: Bulk<Item = T>;
+    #[cfg(feature ="bulks")]
+    type Output: Iterator<Item = T> + bulks::Bulk<Item = T>;
+    #[cfg(not(feature ="bulks"))]
+    type Output: Iterator<Item = T>;
 
     /// Returns an iterator of evenly spaced values. `count` must be specified.
     /// 
@@ -103,7 +105,7 @@ macro_rules! impl_linspace {
                 }
                 unsafe fn linspace_uninit_slice<'a>(&self, slice: &'a mut [MaybeUninit<T>]) -> &'a mut [T]
                 {
-                    let mut iter = IntoIter::new(self.linspace(slice.len()));
+                    let mut iter = self.linspace(slice.len());
                     let mut i = 0;
                     while let Some(next) = iter.forward()
                     {
@@ -116,7 +118,7 @@ macro_rules! impl_linspace {
                 }
                 fn linspace_slice(&self, slice: &mut [T])
                 {
-                    let mut iter = IntoIter::new(self.linspace(slice.len()));
+                    let mut iter = self.linspace(slice.len());
                     let mut i = 0;
                     while let Some(next) = iter.forward()
                     {
@@ -137,8 +139,6 @@ impl_linspace!(
 #[cfg(test)]
 mod test
 {
-    use bulks::Bulk;
-
     use crate::{Linspace};
 
     #[test]

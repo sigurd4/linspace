@@ -1,99 +1,36 @@
-use core::{iter::{FusedIterator, TrustedLen, TrustedRandomAccessNoCoerce}, ops::{Add, Range, Try}};
+use core::{iter::{FusedIterator, TrustedLen, TrustedRandomAccessNoCoerce}, ops::Add};
 
 use numscale::NumScale;
 
-use crate::{Linspaced, linspace};
+use crate::Linspaced;
 
-#[derive(Clone)]
-pub struct IntoIter<T, const INCLUSIVE: bool>
+pub struct AsIter<T, const INCLUSIVE: bool = false>
 {
-    linspace: Linspaced<T, INCLUSIVE>,
-    count: Range<usize>
+    linspace: Linspaced<T, INCLUSIVE>
 }
 
-impl<T, const INCLUSIVE: bool> IntoIter<T, INCLUSIVE>
-where
-    T: Copy + NumScale<f64> + Add<Output = T>
+pub type IterInclusive<T> = AsIter<T, true>;
+
+impl<T, const INCLUSIVE: bool> AsIter<T, INCLUSIVE>
 {
     pub(crate) const fn new(linspace: Linspaced<T, INCLUSIVE>) -> Self
     {
         Self {
-            count: 0..linspace.len(),
             linspace
         }
     }
 }
 
-impl<T, const INCLUSIVE: bool> IntoIterator for Linspaced<T, INCLUSIVE>
-where
-    T: Copy + NumScale<f64> + Add<Output = T>
+impl<T, const INCLUSIVE: bool> From<AsIter<T, INCLUSIVE>> for Linspaced<T, INCLUSIVE>
 {
-    type Item = T;
-    type IntoIter = crate::iter::IntoIter<T, INCLUSIVE>;
-
-    fn into_iter(self) -> Self::IntoIter
+    fn from(value: AsIter<T, INCLUSIVE>) -> Self
     {
-        IntoIter::new(self)
+        let AsIter { linspace } = value;
+        linspace
     }
 }
 
-impl<T, const INCLUSIVE: bool> IntoIter<T, INCLUSIVE>
-{
-    pub const fn is_empty(&self) -> bool
-    {
-        self.count.start >= self.count.end
-    }
-    pub const fn len(&self) -> usize
-    {
-        self.count.end.saturating_sub(self.count.start)
-    }
-    pub const fn size_hint(&self) -> (usize, Option<usize>)
-    {
-        (self.len(), self.count.end.checked_sub(self.count.start))
-    }
-
-    pub(crate) const fn forward_unchecked(&mut self) -> T
-    where
-        T: Copy + ~const NumScale<f64> + ~const Add<Output = T>
-    {
-        let x = self.linspace.scale(self.count.start);
-        self.count.start += 1;
-        x
-    }
-
-    pub(crate) const fn forward(&mut self) -> Option<T>
-    where
-        T: Copy + ~const NumScale<f64> + ~const Add<Output = T>
-    {
-        if !(&*self).is_empty()
-        {
-            return Some(self.forward_unchecked())
-        }
-        None
-    }
-
-    pub(crate) const fn backward_unchecked(&mut self) -> T
-    where
-        T: Copy + ~const NumScale<f64> + ~const Add<Output = T>
-    {
-        self.count.end -= 1;
-        let x = self.linspace.scale(self.count.end);
-        x
-    }
-
-    pub(crate) const fn backward(&mut self) -> Option<T>
-    where
-        T: Copy + ~const NumScale<f64> + ~const Add<Output = T>
-    {
-        if !(&*self).is_empty()
-        {
-            return Some(self.forward_unchecked())
-        }
-        None
-    }
-}
-
-impl<T, const INCLUSIVE: bool> Iterator for IntoIter<T, INCLUSIVE>
+impl<T, const INCLUSIVE: bool> Iterator for AsIter<T, INCLUSIVE>
 where
     T: Copy + NumScale<f64> + Add<Output = T>
 {
@@ -102,13 +39,13 @@ where
     #[inline]
     fn next(&mut self) -> Option<Self::Item>
     {
-        self.forward()
+        self.linspace.forward()
     }
 
     #[inline]
     fn size_hint(&self) -> (usize, Option<usize>)
     {
-        self.size_hint()
+        self.linspace.size_hint()
     }
 
     #[inline]
@@ -118,45 +55,47 @@ where
     {
         // SAFETY: the caller must uphold the contract for
         // `Iterator::__iterator_get_unchecked`.
-        unsafe { self.linspace.f()(self.count.__iterator_get_unchecked(idx)) }
+        unsafe { self.linspace.__iterator_get_unchecked(idx) }
     }
 }
 
-impl<T, const INCLUSIVE: bool> DoubleEndedIterator for IntoIter<T, INCLUSIVE>
+impl<T, const INCLUSIVE: bool> DoubleEndedIterator for AsIter<T, INCLUSIVE>
 where
     T: Copy + NumScale<f64> + Add<Output = T>
 {
     #[inline]
     fn next_back(&mut self) -> Option<Self::Item>
     {
-        self.backward()
+        self.linspace.backward()
     }
 }
 
-impl<T, const INCLUSIVE: bool> ExactSizeIterator for IntoIter<T, INCLUSIVE>
+impl<T, const INCLUSIVE: bool> ExactSizeIterator for AsIter<T, INCLUSIVE>
 where
     T: Copy + NumScale<f64> + Add<Output = T>
 {
     fn len(&self) -> usize
     {
-        self.len()
+        self.linspace.len()
     }
 
     fn is_empty(&self) -> bool
     {
-        self.is_empty()
+        self.linspace.is_empty()
     }
 }
 
-impl<T, const INCLUSIVE: bool> FusedIterator for IntoIter<T, INCLUSIVE>
+impl<T, const INCLUSIVE: bool> FusedIterator for AsIter<T, INCLUSIVE>
 where
-    T: Copy + NumScale<f64> + Add<Output = T>
+    T: Copy + NumScale<f64> + Add<Output = T>,
+    Linspaced<T, INCLUSIVE>: FusedIterator
 {
     
 }
-unsafe impl<T, const INCLUSIVE: bool> TrustedLen for IntoIter<T, INCLUSIVE>
+unsafe impl<T, const INCLUSIVE: bool> TrustedLen for AsIter<T, INCLUSIVE>
 where
-    T: Copy + NumScale<f64> + Add<Output = T>
+    T: Copy + NumScale<f64> + Add<Output = T>,
+    Linspaced<T, INCLUSIVE>: TrustedLen
 {
     
 }
@@ -164,19 +103,19 @@ where
 #[cfg(test)]
 mod test
 {
-    use bulks::Bulk;
+    #[allow(unused)]
+    use bulks::*;
 
     use crate::Linspace;
 
     #[test]
-    fn inclusive_bounds()
+    fn it_works()
     {
-        const DEGC_TO_K: f64 = 273.15;
-        let theta_min = DEGC_TO_K;
-        let theta_max = 50.0 + DEGC_TO_K;
+        let r = (0.0..=1.0).linspace(5)
+            .as_iter()
+            .map(|x| 1.0 - x)
+            .collect::<Vec<_>>();
 
-        let r = (theta_min..=theta_max).linspace(128).last().unwrap();
-
-        assert_eq!(r, theta_max);
+        assert_eq!(r, [1.0, 0.75, 0.5, 0.25, 0.0])
     }
 }
