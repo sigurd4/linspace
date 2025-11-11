@@ -4,8 +4,7 @@ use numscale::NumScale;
 
 use crate::Linspaced;
 
-#[const_trait]
-pub trait Linspace<T>: Sized
+pub const trait Linspace<T>: Sized
 {
     #[cfg(feature ="bulks")]
     type Output: Iterator<Item = T> + bulks::Bulk<Item = T>;
