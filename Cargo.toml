@@ -17,5 +17,5 @@ bulks = ["dep:bulks"]
 [dependencies]
 rustversion = "1.0.22"
 numscale = "0.2.0"
-bulks = { version = "0.4.0", default-features = false, optional = true }
+bulks = { version = "0.4.4", default-features = false, optional = true }
 moddef = "0.3.0"
