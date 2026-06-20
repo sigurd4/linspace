@@ -6,9 +6,6 @@ use crate::Linspaced;
 
 pub const trait Linspace<T>: Sized
 {
-    #[cfg(feature ="bulks")]
-    type Output: Iterator<Item = T> + bulks::Bulk<Item = T>;
-    #[cfg(not(feature ="bulks"))]
     type Output: Iterator<Item = T>;
 
     /// Returns an iterator of evenly spaced values. `count` must be specified.
@@ -90,7 +87,7 @@ pub const trait Linspace<T>: Sized
 macro_rules! impl_linspace {
     ($($r:ident => $incl:expr => |$this:ident| $bounds:expr);*$(;)?) => {
         $(
-            impl<T> const Linspace<T> for $r<T>
+            const impl<T> Linspace<T> for $r<T>
             where
                 T: Copy + ~const Add<Output = T> + ~const NumScale<f64>
             {

@@ -5,10 +5,6 @@
 #![feature(trusted_len)]
 #![feature(const_ops)]
 #![feature(maybe_uninit_array_assume_init)]
-#![feature(maybe_uninit_slice)]
-#![cfg_attr(feature = "bulks", feature(const_try))]
-#![cfg_attr(feature = "bulks", feature(const_destruct))]
-#![cfg_attr(feature = "bulks", feature(try_trait_v2))]
 
 //! Turns a range into a linearly spaced sequence of values.
 //!
@@ -69,8 +65,6 @@
 
 moddef::moddef!(
     flat(pub) mod {
-        bulk for cfg(feature = "bulks"),
-        iter for cfg(feature = "bulks"),
         linspace,
         linspaced
     }

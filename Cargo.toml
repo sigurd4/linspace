@@ -10,12 +10,6 @@ categories = ["rust-patterns", "no-std::no-alloc"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
-[features]
-default = []
-bulks = ["dep:bulks"]
-
 [dependencies]
-rustversion = "1.0.22"
-numscale = "0.2.0"
-bulks = { version = "0.4.4", default-features = false, optional = true }
+numscale = "0.2.1"
 moddef = "0.3.0"
